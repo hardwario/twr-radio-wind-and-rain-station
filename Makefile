@@ -2,6 +2,7 @@ SDK_DIR ?= sdk
 VERSION ?= vdev
 
 CFLAGS += -D'VERSION="${VERSION}"'
+CFLAGS += -D'TWR_SCHEDULER_INTERVAL_MS=50'
 
 -include sdk/Makefile.mk
 
