@@ -75,6 +75,11 @@ twr_switch_t rain_gauge;
 #define TRANSMIT_PERIOD_MINUTES 10
 #define WIND_DATA_STREAM_SAMPLES 40
 
+// If you use external pull-up >500kOhm to lower current through resistor from 100 uA to 1uA when the wind speed
+// vane is in a position where the magnetic reed is closed
+// Connect 1M resistor between VDD and A screw terminal
+//#define EXTERNAL_PULLUP_VCC_A
+
 // Data stream for wind speed averaging
 TWR_DATA_STREAM_FLOAT_BUFFER(stream_buffer_wind_speed, WIND_DATA_STREAM_SAMPLES)
 TWR_DATA_STREAM_FLOAT_BUFFER(stream_buffer_internal_temperature, WIND_DATA_STREAM_SAMPLES)
@@ -353,6 +358,13 @@ void application_init(void)
     twr_pulse_counter_init(TWR_MODULE_SENSOR_CHANNEL_A, TWR_PULSE_COUNTER_EDGE_FALL);
     twr_pulse_counter_set_event_handler(TWR_MODULE_SENSOR_CHANNEL_A, NULL, NULL);
 
+    #ifdef EXTERNAL_PULLUP_VCC_A
+    // Disable internal pullup
+    twr_module_sensor_set_pull(TWR_MODULE_SENSOR_CHANNEL_A, TWR_MODULE_SENSOR_PULL_NONE);
+    // Enable power to VDD to power the extenal resistor pullup
+    twr_module_sensor_set_vdd(true);
+    #endif
+
     // Rain counter
     twr_switch_init(&rain_gauge, TWR_GPIO_P7, TWR_SWITCH_TYPE_NC, TWR_SWITCH_PULL_UP_DYNAMIC);
     twr_switch_set_event_handler(&rain_gauge, rain_counter_handler, NULL);
@@ -372,8 +384,8 @@ void application_init(void)
     // When these two tasks are together it does not work properly.
     twr_scheduler_task_id_t publish_wind_task_id = twr_scheduler_register(publish_wind_task, NULL, 0);
     twr_scheduler_task_id_t publish_rain_task_id = twr_scheduler_register(publish_rain_task, NULL, 0);
-    twr_scheduler_plan_relative(publish_wind_task_id, 20 * 1000); // Schedule sending 20 seconds after start
-    twr_scheduler_plan_relative(publish_rain_task_id, 21 * 1000); // Schedule sending 21 seconds after start
+    twr_scheduler_plan_relative(publish_wind_task_id, 10 * 1000); // Schedule sending 10 seconds after start
+    twr_scheduler_plan_relative(publish_rain_task_id, 12 * 1000); // Schedule sending 12 seconds after start
 
     #ifdef CLIMATE_ENABLE
     // Initialize climate module
