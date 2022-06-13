@@ -50,7 +50,7 @@ To log wind data from MQTT to InfluxDB you need to add this configuration to /et
 
 import file `grafana-dasboard-import.json` from the repository to display graphs for wind and rain.
 
-![alt text](https://raw.githubusercontent.com/owarek/BC-WindAndRainSensor/master/img/IMG_20181106_155253.jpg)
+![alt text](https://raw.githubua.s.tent.com/owarek/BC-WindAndRainSensor/master/img/IMG_20181106_155253.jpg)
 
 --------
 This is modified version of https://github.com/hubmartin/bcf-sigfox-wind-station. Thank you Martin :)
