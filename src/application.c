@@ -400,7 +400,7 @@ void application_init(void)
 
     // Initialize radio
     twr_radio_init(TWR_RADIO_MODE_NODE_SLEEPING);
-    twr_radio_pairing_request("wind-station", VERSION);
+    twr_radio_pairing_request("wind-station", FW_VERSION);
 
     // Do a single blink to signalize that module is working
     twr_led_pulse(&led, 2000);
